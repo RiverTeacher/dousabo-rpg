@@ -1,44 +1,24 @@
-// service-worker.js
-
-const CACHE_NAME = 'dousabo-cache-v1';
-const urlsToCache = [
-  '/', // ホームページ
-  '/index.html', // メインページ
-  '/manifest.json', // マニフェストファイル
-  '/dousabo-rpg/1000046321.png', // 画像
-];
-
-// インストール時にキャッシュを作成
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Service Worker: キャッシュ作成');
-      return cache.addAll(urlsToCache);
-    })
-  );
-});
-
-// fetch イベントでキャッシュを利用（オフライン対応）
+// fetch イベントでネットワークを優先（オフライン対応）
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
-});
-
-// サービスワーカーのアクティベーション
-self.addEventListener('activate', (event) => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (!cacheWhitelist.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        // ネットワークから取得成功
+        // キャッシュも更新しておく (任意)
+        return caches.open(CACHE_NAME).then((cache) => {
+          // networkResponseは一度しか読めないのでcloneする
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      })
+      .catch(() => {
+        // ネットワークから取得失敗 (オフラインなど)
+        // キャッシュから探してみる
+        return caches.match(event.request).then((cachedResponse) => {
+          // キャッシュがあればそれを返す
+          // キャッシュもなければ、ここでさらに代替レスポンス (例: オフライン用ページ) を返すことも可能
+          return cachedResponse || Response.error(); // または適切なフォールバック
+        });
+      })
   );
 });
