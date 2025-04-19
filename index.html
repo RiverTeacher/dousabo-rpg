@@ -48,6 +48,11 @@
       background: linear-gradient(to right, #00f260, #0575e6);
       transition: width 0.1s linear;
     }
+
+    #installBtn {
+      display: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -57,14 +62,41 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
+  <button id="installBtn" style="display: none;">アプリをインストール</button>
+
   <script>
+    let deferredPrompt;
+
+    // インストールプロンプトをキャッチ
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();  // デフォルトのインストールポップアップを防ぐ
+      deferredPrompt = e;
+
+      const installBtn = document.getElementById('installBtn');
+      installBtn.style.display = 'block';  // ボタンを表示
+
+      installBtn.addEventListener('click', () => {
+        installBtn.style.display = 'none';  // ボタンを非表示
+        deferredPrompt.prompt();  // インストールのダイアログを表示
+
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('ユーザーがインストールを承認しました');
+          } else {
+            console.log('ユーザーがインストールを拒否しました');
+          }
+          deferredPrompt = null;
+        });
+      });
+    });
+
     const targetUrl = "https://sites.google.com/view/dousabo-game-yamasita8/%E3%82%A2%E3%83%97%E3%83%AA";
     let score = 0;
     const progressBar = document.getElementById('progressBar');
     const loadingText = document.getElementById('loadingText');
 
     const interval = setInterval(() => {
-      const increment = Math.floor(Math.random() * 6); // 0〜10
+      const increment = Math.floor(Math.random() * 6); // 0〜6
       score = Math.min(score + increment, 100);
 
       loadingText.textContent = `ロード中... ${score}% 完了`;
@@ -72,15 +104,18 @@
 
       if (score >= 100) {
         clearInterval(interval);
-        location.replace(targetUrl);
+        
+        // 4秒間の遅延後にリダイレクト
+        setTimeout(() => {
+          location.replace(targetUrl);
+        }, 4000); // 4秒
       }
     }, 100);
-  </script>
-  <script>
-  navigator.serviceWorker.register('/dousabo-rpg/service-worker.js')
-  .then(reg => console.log('SW registered'))
-  .catch(err => console.error('SW registration failed:', err));
-</script>
 
+    // サービスワーカーの登録
+    navigator.serviceWorker.register('/dousabo-rpg/service-worker.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.error('SW registration failed:', err));
+  </script>
 </body>
 </html>
