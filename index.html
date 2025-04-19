@@ -61,14 +61,14 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <button id="installBtn" style="display: none;">アプリをインストール</button>
+<!--  <button id="installBtn" style="display: none;">アプリをインストール</button> -->
 
   <script>
     let deferredPrompt;
 
     // インストールプロンプトをキャッチ
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();  // デフォルトのインストールポップアップを防ぐ
+     // e.preventDefault();  デフォルトのインストールポップアップを防ぐ
       deferredPrompt = e;
 
       const installBtn = document.getElementById('installBtn');
