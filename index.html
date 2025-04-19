@@ -76,7 +76,8 @@
       }
     }, 100);
   </script>
-  <script>navigator.serviceWorker.register('/service-worker.js')
+  <script>
+  navigator.serviceWorker.register('/dousabo-rpg/service-worker.js')
   .then(reg => console.log('SW registered'))
   .catch(err => console.error('SW registration failed:', err));
 </script>
