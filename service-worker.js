@@ -4,20 +4,34 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request)
       .then((networkResponse) => {
         // ネットワークから取得成功
-        // キャッシュも更新しておく (任意)
-        return caches.open(CACHE_NAME).then((cache) => {
+        // レスポンスが正常 (status 200-299) かつ null でないことを確認
+        if (networkResponse && networkResponse.ok) {
+          // キャッシュも更新しておく
           // networkResponseは一度しか読めないのでcloneする
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        });
+          const responseToCache = networkResponse.clone(); // クローンを作成
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache); // クローンをキャッシュに入れる
+          });
+        }
+        // どのようなレスポンスであれ、元のネットワークレスポンスをブラウザに返す
+        return networkResponse;
       })
       .catch(() => {
         // ネットワークから取得失敗 (オフラインなど)
         // キャッシュから探してみる
+        console.log('Network failed, trying cache for:', event.request.url); // デバッグ用ログ
         return caches.match(event.request).then((cachedResponse) => {
-          // キャッシュがあればそれを返す
-          // キャッシュもなければ、ここでさらに代替レスポンス (例: オフライン用ページ) を返すことも可能
-          return cachedResponse || Response.error(); // または適切なフォールバック
+          if (cachedResponse) {
+            console.log('Cache hit for:', event.request.url); // デバッグ用ログ
+            return cachedResponse;
+          } else {
+            console.log('Cache miss for:', event.request.url); // デバッグ用ログ
+            // キャッシュにもなければエラーレスポンスを返す (またはオフラインページなど)
+            // Response.error() は時々 ERR_FAILED を引き起こす可能性があるので注意
+            // 代わりに new Response(...) でカスタムエラーページを返す方が安定するかも
+            return Response.error();
+            // return new Response("Network error and no cache available.", { status: 503, statusText: "Service Unavailable" });
+          }
         });
       })
   );
