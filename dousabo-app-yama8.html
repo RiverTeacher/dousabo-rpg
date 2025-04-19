@@ -2,89 +2,13 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="robots" content="noindex">
-  <meta name="googlebot" content="noindex">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="/manifest.json">
-  <title>どうさぼアプリAPI</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #111;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .logo {
-      width: 100px;
-      height: auto;
-      margin-bottom: 20px;
-    }
-
-    .loading-text {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-
-    .progress-container {
-      width: 80%;
-      height: 25px;
-      background-color: #333;
-      border-radius: 15px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #00f260, #0575e6);
-      transition: width 0.1s linear;
-    }
-  </style>
+  <title>android</title>
+  <script>
+    // ページ読み込みと同時に index.html にリダイレクト（履歴に残さない）
+    window.location.replace("index.html");
+  </script>
 </head>
 <body>
-  <img class="logo" src="https://riverteacher.github.io/dousabo-rpg/1000046321.png" alt="ロゴ">
-  <div class="loading-text" id="loadingText">ロード中... 0% 完了</div>
-  <div class="progress-container">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-
-  <script>
-    const targetUrl = "https://sites.google.com/view/dousabo-game-yamasita8/%E3%82%A2%E3%83%97%E3%83%AA";
-    let score = 0;
-    const progressBar = document.getElementById('progressBar');
-    const loadingText = document.getElementById('loadingText');
-
-    const interval = setInterval(() => {
-      const increment = Math.floor(Math.random() * 11); // 0〜10
-      score = Math.min(score + increment, 100);
-
-      loadingText.textContent = `ロード中... ${score}% 完了`;
-      progressBar.style.width = `${score}%`;
-
-      if (score >= 100) {
-        clearInterval(interval);
-        location.replace(targetUrl);
-      }
-    }, 100);
-  </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(registration => {
-      console.log('ServiceWorker registration successful.');
-    }).catch(err => {
-      console.log('ServiceWorker registration failed.');
-    });
-  }
-</script>
-
+  <p>サーバーに接続中…</p>
 </body>
 </html>
