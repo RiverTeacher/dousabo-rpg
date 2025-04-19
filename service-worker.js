@@ -6,8 +6,6 @@ const urlsToCache = [
   '/index.html', // メインページ
   '/manifest.json', // マニフェストファイル
   '/dousabo-rpg/1000046321.png', // 画像
-  '/style.css', // スタイル
-  '/app.js', // スクリプト
 ];
 
 // インストール時にキャッシュを作成
