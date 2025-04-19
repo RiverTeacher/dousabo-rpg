@@ -1,25 +1,21 @@
-// service-worker.js
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
 
-self.addEventListener('install', (event) => {
-  // 即時有効化
-  self.skipWaiting();
-  console.log('Service Worker installed (no cache).');
-});
+  if (
+    url.pathname.endsWith('.png') ||
+    url.pathname.endsWith('.ico') ||
+    url.pathname.includes('dousabo192') ||
+    url.pathname.includes('dousabo512') ||
+    url.pathname.endsWith('manifest.json')
+  ) {
+    return; // ブラウザに任せる
+  }
 
-self.addEventListener('activate', (event) => {
-  // クライアントをすぐにコントロール
-  event.waitUntil(self.clients.claim());
-  console.log('Service Worker activated (no cache).');
-});
-
-self.addEventListener('fetch', (event) => {
-  // 常にネットワークから取得
   event.respondWith(
     fetch(event.request).catch(() => {
-      // ネットワークエラー時のフォールバック（必要ならここに記述）
-      return new Response('Network error occurred', {
+      return new Response('ネットワークエラーが発生しました。', {
         status: 408,
-        statusText: 'Network Timeout',
+        statusText: 'Network Error'
       });
     })
   );
