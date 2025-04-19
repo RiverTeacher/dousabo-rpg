@@ -76,14 +76,9 @@
       }
     }, 100);
   </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(registration => {
-      console.log('ServiceWorker registration successful.');
-    }).catch(err => {
-      console.log('ServiceWorker registration failed.');
-    });
-  }
+  <script>navigator.serviceWorker.register('/service-worker.js')
+  .then(reg => console.log('SW registered'))
+  .catch(err => console.error('SW registration failed:', err));
 </script>
 
 </body>
