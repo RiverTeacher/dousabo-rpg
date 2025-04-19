@@ -1,38 +1,26 @@
-// fetch イベントでネットワークを優先（オフライン対応）
+// service-worker.js
+
+self.addEventListener('install', (event) => {
+  // 即時有効化
+  self.skipWaiting();
+  console.log('Service Worker installed (no cache).');
+});
+
+self.addEventListener('activate', (event) => {
+  // クライアントをすぐにコントロール
+  event.waitUntil(self.clients.claim());
+  console.log('Service Worker activated (no cache).');
+});
+
 self.addEventListener('fetch', (event) => {
+  // 常にネットワークから取得
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // ネットワークから取得成功
-        // レスポンスが正常 (status 200-299) かつ null でないことを確認
-        if (networkResponse && networkResponse.ok) {
-          // キャッシュも更新しておく
-          // networkResponseは一度しか読めないのでcloneする
-          const responseToCache = networkResponse.clone(); // クローンを作成
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache); // クローンをキャッシュに入れる
-          });
-        }
-        // どのようなレスポンスであれ、元のネットワークレスポンスをブラウザに返す
-        return networkResponse;
-      })
-      .catch(() => {
-        // ネットワークから取得失敗 (オフラインなど)
-        // キャッシュから探してみる
-        console.log('Network failed, trying cache for:', event.request.url); // デバッグ用ログ
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            console.log('Cache hit for:', event.request.url); // デバッグ用ログ
-            return cachedResponse;
-          } else {
-            console.log('Cache miss for:', event.request.url); // デバッグ用ログ
-            // キャッシュにもなければエラーレスポンスを返す (またはオフラインページなど)
-            // Response.error() は時々 ERR_FAILED を引き起こす可能性があるので注意
-            // 代わりに new Response(...) でカスタムエラーページを返す方が安定するかも
-            return Response.error();
-            // return new Response("Network error and no cache available.", { status: 503, statusText: "Service Unavailable" });
-          }
-        });
-      })
+    fetch(event.request).catch(() => {
+      // ネットワークエラー時のフォールバック（必要ならここに記述）
+      return new Response('Network error occurred', {
+        status: 408,
+        statusText: 'Network Timeout',
+      });
+    })
   );
 });
