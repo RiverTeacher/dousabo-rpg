@@ -1,26 +1,46 @@
 // service-worker.js
 
+const CACHE_NAME = 'dousabo-cache-v1';
+const urlsToCache = [
+  '/', // ホームページ
+  '/index.html', // メインページ
+  '/manifest.json', // マニフェストファイル
+  '/dousabo-rpg/1000046321.png', // 画像
+  '/style.css', // スタイル
+  '/app.js', // スクリプト
+];
+
+// インストール時にキャッシュを作成
 self.addEventListener('install', (event) => {
-  // 即時有効化
-  self.skipWaiting();
-  console.log('Service Worker installed (no cache).');
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('Service Worker: キャッシュ作成');
+      return cache.addAll(urlsToCache);
+    })
+  );
 });
 
-self.addEventListener('activate', (event) => {
-  // クライアントをすぐにコントロール
-  event.waitUntil(self.clients.claim());
-  console.log('Service Worker activated (no cache).');
-});
-
+// fetch イベントでキャッシュを利用（オフライン対応）
 self.addEventListener('fetch', (event) => {
-  // 常にネットワークから取得
   event.respondWith(
-    fetch(event.request).catch(() => {
-      // ネットワークエラー時のフォールバック（必要ならここに記述）
-      return new Response('Network error occurred', {
-        status: 408,
-        statusText: 'Network Timeout',
-      });
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});
+
+// サービスワーカーのアクティベーション
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (!cacheWhitelist.includes(cacheName)) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
     })
   );
 });
