@@ -64,7 +64,7 @@
     const loadingText = document.getElementById('loadingText');
 
     const interval = setInterval(() => {
-      const increment = Math.floor(Math.random() * 11); // 0〜10
+      const increment = Math.floor(Math.random() * 6); // 0〜10
       score = Math.min(score + increment, 100);
 
       loadingText.textContent = `ロード中... ${score}% 完了`;
