@@ -1,19 +1,20 @@
 // service-worker.js
 
 self.addEventListener('install', event => {
-  // インストール時に即座にアクティブに
   self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
-  // アクティブになったらすぐにクライアントを制御
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.map(key => caches.delete(key)))
+    ).then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // 以下のリクエストはブラウザに任せる（アイコン・manifest・favicon など）
   const isBypassRequest = (
     url.pathname.endsWith('.png') ||
     url.pathname.endsWith('.ico') ||
@@ -26,11 +27,9 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // ネットワークオンリー戦略
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .catch(() => {
-        // ネットワークエラー時のレスポンス
         return new Response('ネットワークエラーが発生しました。', {
           status: 408,
           statusText: 'Network Error',
