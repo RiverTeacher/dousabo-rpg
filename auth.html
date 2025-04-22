@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別認証</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>特別認証範囲</h2>
+        <p>このページは特定のユーザーのみがご利用いただけるページです。</p>
+        <p><span id="target-name"></span> をご利用いただくには、パスワードを入力してください。</p>
+        <input type="password" id="password" placeholder="パスワード">
+        <button onclick="authenticate()">認証</button>
+        <p id="error-message" class="error" style="display:none;">パスワードが間違っています。</p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetName = urlParams.get('name');
+        const expectedPassword = urlParams.get('password');
+        const redirectUrl = urlParams.get('url');
+        const targetNameElement = document.getElementById('target-name');
+        const passwordInput = document.getElementById('password');
+        const errorMessageElement = document.getElementById('error-message');
+
+        if (targetName) {
+            targetNameElement.textContent = targetName;
+        }
+
+        function authenticate() {
+            const enteredPassword = passwordInput.value;
+            if (enteredPassword === expectedPassword) {
+                // 直近15分以内であればリダイレクト
+                const lastAccessTime = localStorage.getItem('lastAccessTime');
+                const currentTime = Date.now();
+                const fifteenMinutes = 15 * 60 * 1000;
+
+                if (lastAccessTime && (currentTime - parseInt(lastAccessTime)) < fifteenMinutes) {
+                    window.location.href = redirectUrl;
+                } else {
+                    localStorage.setItem('lastAccessTime', currentTime);
+                    window.location.href = redirectUrl;
+                }
+            } else {
+                errorMessageElement.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
