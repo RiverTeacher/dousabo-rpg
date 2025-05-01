@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+  <meta charset="UTF-8">
   <title>漢字読みテスト</title>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
   <style>
-    canvas { border: 1px solid black; }
-    #result { font-size: 20px; margin-top: 10px; }
+    canvas {
+      border: 1px solid black;
+      touch-action: none; /* モバイルでスクロール防止 */
+    }
+    #result {
+      font-size: 20px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
 <h2>「木」の読みを書いてください</h2>
-<canvas id="canvas" width="200" height="100"></canvas><br>
+<canvas id="canvas" width="300" height="150"></canvas><br>
 <button onclick="recognize()">確定</button>
 <button onclick="clearCanvas()">消去</button>
 <div id="result"></div>
@@ -21,19 +28,51 @@
   const ctx = canvas.getContext('2d');
   let drawing = false;
 
-  canvas.addEventListener('mousedown', () => drawing = true);
-  canvas.addEventListener('mouseup', () => drawing = false);
+  // PCマウス操作
+  canvas.addEventListener('mousedown', () => {
+    drawing = true;
+  });
+  canvas.addEventListener('mouseup', () => {
+    drawing = false;
+    ctx.beginPath();
+  });
   canvas.addEventListener('mousemove', draw);
+
+  // タッチ操作
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    drawing = true;
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    drawPoint(touch.clientX - rect.left, touch.clientY - rect.top);
+  });
+
+  canvas.addEventListener('touchend', () => {
+    drawing = false;
+    ctx.beginPath();
+  });
 
   function draw(e) {
     if (!drawing) return;
+    drawPoint(e.offsetX, e.offsetY);
+  }
+
+  function drawPoint(x, y) {
     ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.strokeStyle = '#000';
-    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.lineTo(x, y);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(e.offsetX, e.offsetY);
+    ctx.moveTo(x, y);
   }
 
   function clearCanvas() {
@@ -46,8 +85,8 @@
     const dataURL = canvas.toDataURL();
     const { data: { text } } = await Tesseract.recognize(dataURL, 'jpn');
     const recognized = text.trim();
-    const correctAnswer = "き"; // 例：木の読み「き」
-    
+    const correctAnswer = "き"; // 正解の読み
+
     const resultDiv = document.getElementById('result');
     if (recognized === correctAnswer) {
       resultDiv.textContent = `正解！ (${recognized})`;
