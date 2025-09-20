@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ポータルサイト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        #content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          　 overflow: auto;
+            /* height: 100vh; */ /* この行をコメントアウトまたは削除 */
+        }
+        
+        #search-box {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        #search-query {
+            border-radius: 20px 0 0 20px;
+            border: none;
+            padding: 10px;
+            width: 200px;
+        }
+        
+        #search-button {
+            border-radius: 0 20px 20px 0;
+            border: none;
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        #shortcuts {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        #shortcuts a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        
+        #notifications {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        
+        #clock {
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        #header h1 {
+            background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .ad-container {
+  position: relative;
+  width: 300px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  font-size: 24px;
+  color: #888;
+}
+
+.close-btn:hover {
+  color: #555;
+}
+
+/*パーティクル*/
+.pointer {
+  cursor: pointer
+}
+.dot-wrap {
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+}
+.dot {
+  width: 80px;
+  height: 80px;
+  box-sizing: border-box;
+  border: 2px solid red;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.active {
+  animation: wave .4s forwards linear;
+}
+.stop {
+  animation-play-state: paused;
+}
+
+@keyframes wave {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.area {
+  width: 550px;
+  margin: auto;
+  flex-wrap: wrap;
+  display: flex;
+}
+ 
+.tab_class {
+  width: calc(100%/5);
+  height: 50px;
+  background-color: darkgrey;
+  line-height: 50px;
+  font-size: 15px;
+  text-align: center;
+  display: block;
+  float: left;
+  order: -1;
+}
+ 
+input[name="tab_name"] {
+  display: none;
+}
+ 
+input:checked + .tab_class {
+  background-color: cadetblue;
+  color: aliceblue;
+}
+ 
+.content_class {
+  display: none;
+  width: 100%;  
+  text-align: center;
+
+}
+      
+ .content_class a{
+              display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+}     
+ 
+input:checked + .tab_class + .content_class {
+  display: block;
+}
+       
+      
+    </style>
+    <!--パーティクル-->
+    <script>
+        window.addEventListener('mousedown', e => {
+  const x = e.clientX
+  const y = e.clientY
+  setWave(x, y)
+})
+
+window.addEventListener('touchstart', e => {
+  const touch = e.touches[0]
+  const x = touch.clientX
+  const y = touch.clientY
+  setWave(x, y)
+})
+
+const setWave = (x, y) => {
+  const base = 80
+  const wrap = document.querySelector('.dot-wrap')
+  const target = document.querySelector('.dot')
+  wrap.style.transform = `translate(${x/80*100}%, ${y/80*100}%) translate(${base/-2}px, ${base/-2}px)`
+  if (target.classList.contains('active')) {
+    target.classList.add('stop')
+    target.classList.remove('active')
+  } 
+  requestAnimationFrame(() => {
+    target.classList.remove('stop')
+    target.classList.add('active')
+  })
+}
+    </script>
+    <script>
+        function search() {
+            var query = document.getElementById("search-query").value;
+            window.location.href = "https://www.ecosia.org/search?method=index&c=jp&q=" + encodeURIComponent(query);
+        }
+        
+        function getCurrentTime() {
+            var currentTime = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+            document.getElementById("clock").textContent = currentTime;
+        }
+        
+        setInterval(getCurrentTime, 500);
+    </script>
+</head>
+<body>
+    <div id="header">
+
+        <h1>
+            <span>ト</span>
+            <span>ッ</span>
+            <span>プ</span>
+            <span>ペ</span>
+            <span>ー</span>
+            <span>ジ</span>
+                   </h1>
+    </div>
+    <div id="content">
+        <!-- admax -->
+<script src="https://adm.shinobi.jp/s/41d0890960baf5f246c9d9bfbc2de0d7"></script>
+<!-- admax -->
+<script type="text/javascript">
+    atOptions = {
+        'key' : 'ee2ea903f09b5f26304e14ff794e634d',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+    };
+    document.write('<scr' + 'ipt type="text/javascript" src="//www.highcpmcreativeformat.com/ee2ea903f09b5f26304e14ff794e634d/invoke.js"></scr' + 'ipt>');
+</script>
+        <h2>現在時刻</h2>
+        <div style="color: red;" id="clock"></div>
+        <p>検索したいサイトの名前を入力してください🔎</p>
+        <div id="search-box">
+            <input type="text" id="search-query" placeholder="検索キーワードを入力">
+            <button id="search-button" onclick="search()">検索</button>
+        </div>
+      <!--
+        <div id="shortcuts">
+            <h2>下記ボタンからサイトに移動可能です</h2>
+            <a href="https://www.youtube.jp">YouTube</a>
+            <a href="https://github.com">Github</a>
+            <a href="http://www.lomando.com/">ふぁんしーあいらんど</a>
+            <a href="afk.html">放置ページ</a>
+            <a href="https://swanky-mixolydian-legume.glitch.me">空き確認サイト</a>
+           <br> <a href="https://questant.jp/q/TU6AB02Z">【期間限定】早期機能テスターの募集</a><a href="https://godfield.net">ゴッドフィールド</a>
+           </div>
+ <!-- 他のショートカットボタンを追加 -->
+      
+      <h2>下記ボタンからサイトに移動可能です</h2><div style="color:red;">当サイト関連のページは「サイト関連」に移動しております。定期的にご確認ください</div>
+        <div class="area">
+    <input type="radio" name="tab_name" id="tab1" checked>
+    <label class="tab_class" for="tab1">動画</label>
+    <div class="content_class">
+      <a href="youtube.html">YouTube</a>
+      <a href="https://tver.jp/">Tver</a>
+      <a href="https://www.nicovideo.jp/">ニコニコ動画</a>
+      <a href="https://www.netflix.com/jp/Login">Netflix</a>
+    </div>
+    <input type="radio" name="tab_name" id="tab2" >
+    <label class="tab_class" for="tab2">SNS・チャット</label>
+    <div class="content_class">
+       <a href="discord.html">Discord</a>
+       <a href="twitter.html">Twitter</a>
+       <a href="instagram.html">Instagram</a>
+       <a href="https://misskey.io/">misskey.io</a>
+   
+    </div>
+    <input type="radio" name="tab_name" id="tab3" >
+    <label class="tab_class" for="tab3">暇つぶし</label>
+    <div class="content_class">
+      <a href="godfield.html">ゴッドフィールド</a>
+      <a href="https://www.miniplay.com/">よくわからんゲームのサイト</a>
+      <a href="https://freem.ne.jp/">ふりーむ</a>
+    </div>
+    <input type="radio" name="tab_name" id="tab4" >
+    <label class="tab_class" for="tab4">ツール</label>
+    <div class="content_class">
+     <a href="https://github.com/">Github</a>
+    </div>
+    <input type="radio" name="tab_name" id="tab5" >
+          <label class="tab_class" for="tab5" style="color: red;">サイト関連</font></label>
+    <div class="content_class">
+      　　　　<a href="afk.html">放置ページ</a>
+            <a href="https://swanky-mixolydian-legume.glitch.me">空き確認サイト</a>
+    </div>    
+  </div>
+          
+      
+        <div id="notifications">
+            <h2 style="text-align: center; color: red;">🔔お知らせ🔔</h2>
+            <ul>
+                <li>2023/07/09 ポータルサイトが公開されました</li>
+                <li>2023/07/28 <a href="利用規約.html">利用規約</a>が変更されました。サービスを使用し続けると同意したことになります。</li>
+                <li>2023/08/24 利用者の増加による仕様変更のお知らせを追加いたしました。<a href="20230824.html">こちら</a>からご確認ください。</li>
+                <li>2023/09/05 <a href="https://heavenvm.tawk.help/search?q=%E3%81%B8%E3%82%8B%E3%81%B7">ヘルプページ</a>を作成いたしました。よくある質問をまとめたのでご不明点あれば気軽に検索してください。</li>
+                <li>2023/09/14 IDをメールアドレスに変更する機能を追加しました。これで長い文字列を覚えたり貼ったりする必要がなくなります！<a href="20230914.html">詳細はこちら</a></li>
+                <li>2023/09/20 <a href="利用規約.html">利用規約</a>が変更されました。サービスを使用し続けると同意したことになります。</li>  
+                <li>2023/10/19 [復旧済み]障害発生のお知らせを追加いたしました。詳細は<a href="20231019.html">こちら</a></li>  
+                <li>2024/01/22 <font color="white" style="background-color: lightgreen;">重要</font>ポータルサイトの検索エンジンを「ecosia」に変更しました。検索した分だけ植林に貢献できます。</li> 
+                <li>2024/01/28 ポータルサイトをリニューアルしました！</li>  
+                <!-- 他のお知らせを追加 -->
+            </ul>
+
+        </div>
+
+        <marquee scrollamount="15" style="font-size: 30px;">お問い合わせを行う場合は<font color="red">アカウントログイン画面</font>よりアカウント作成ボタンを押してください。</marquee>
+    </div>
+    <!-- admax -->
+<script src="https://adm.shinobi.jp/s/23c1a6e5a29485353449ccdbd76f8d86"></script>
+<!-- admax -->
+<!--shinobi1--><script type="text/javascript" src="//xa.shinobi.jp/ufo/191428101"></script><noscript><a href="//xa.shinobi.jp/bin/gg?191428101" target="_blank"><img src="//xa.shinobi.jp/bin/ll?191428101" border="0"></a><br><span style="font-size:9px"><img style="margin:0;vertical-align:text-bottom;" src="//img.shinobi.jp/tadaima/fj.gif" width="19" height="11"> </span></noscript><!--shinobi2-->
+<script type="text/javascript">
+    atOptions = {
+        'key' : 'ee2ea903f09b5f26304e14ff794e634d',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+    };
+    document.write('<scr' + 'ipt type="text/javascript" src="//www.highcpmcreativeformat.com/ee2ea903f09b5f26304e14ff794e634d/invoke.js"></scr' + 'ipt>');
+</script>
+<script type="text/javascript">
+    atOptions = {
+        'key' : '7c28bebd5104173ad1a10f8eec5a0a9d',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+    };
+    document.write('<scr' + 'ipt type="text/javascript" src="//www.highcpmcreativeformat.com/7c28bebd5104173ad1a10f8eec5a0a9d/invoke.js"></scr' + 'ipt>');
+</script>
+<!-- video ad -->
+<script>
+(function(__htavim){
+var d = document,
+    s = d.createElement('script'),
+    l = d.scripts[d.scripts.length - 1];
+s.settings = __htavim || {};
+s.src = "\/\/tiny-atmosphere.com\/dfmPFdznd.GllztQPC3xpsvAb_m\/V\/J-ZVDG0\/0aOYT\/U\/ykO\/TZQo0\/LtTtQ\/5GNUTbIe5aNdDmUk";
+s.async = true;
+l.parentNode.insertBefore(s, l);
+})()
+</script>
+<script type="text/javascript"> atOptions = { 'key' : '7c28bebd5104173ad1a10f8eec5a0a9d', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} }; document.write('<scr' + 'ipt type="text/javascript" src="//www.topcreativeformat.com/7c28bebd5104173ad1a10f8eec5a0a9d/invoke.js"></scr' + 'ipt>'); </script>
+<!--プッシュ-->
+<script>
+(function(ftb){
+var d = document,
+    s = d.createElement('script'),
+    l = d.scripts[d.scripts.length - 1];
+s.settings = ftb || {};
+s.src = "\/\/feistyswim.com\/a_W\/5Iw.YnWLdSlRQu2H9ckUZBTz9o6\/bY2m5xl-SaWmQ\/9MNTD\/kD2vOHDxQm2UMNiJ0I0MOJTbY\/4pNzD\/Y\/zF";
+s.async = true;
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
+<div class="dot-wrap">
+  <div class="dot"></div>
+</div>
+</body>
+</html>
