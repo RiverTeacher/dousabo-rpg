@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>準備中 | 旅行参加費用お支払いサイト</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', 'Noto Sans JP', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-full flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+
+    <!-- ヘッダー -->
+    <header class="w-full max-w-5xl mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-200/80">
+        <div class="flex items-center space-x-3">
+            <!-- クレジットカード・決済を想起させるクリーンなアイコン -->
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+                <line x1="7" y1="15" x2="13" y2="15" />
+            </svg>
+            <span class="text-sm font-bold tracking-wider text-slate-800 uppercase">Travel Payment Portal</span>
+        </div>
+        <div>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                準備中
+            </span>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-16 max-w-2xl mx-auto w-full">
+        
+        <!-- セキュリティ/鍵のビジュアル（信頼感の醸成） -->
+        <div class="mb-8 p-4 bg-blue-50 rounded-full text-blue-600">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+        </div>
+
+        <!-- タイトル・案内 -->
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-4 text-center">
+            旅行参加費用のお支払い手続きは<br class="sm:hidden">現在準備中です
+        </h1>
+        
+        <p class="text-slate-600 text-sm md:text-base leading-relaxed text-center max-w-lg mb-12">
+            次回旅行のツアー詳細、および参加費用の決済手続きは現在システム準備中です。主催者よりお支払い開始の案内（メール等）が届くまで、今しばらくお待ちください。
+        </p>
+
+        <!-- 手続きの流れ（タイムライン） -->
+        <div class="w-full bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-sm mb-10">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6 text-center sm:text-left">
+                お支払いまでのステップ
+            </h3>
+            
+            <div class="space-y-6 relative">
+                <!-- 縦の接続線（モバイル用） -->
+                <div class="absolute left-4 top-2 bottom-2 w-0.5 bg-slate-100 sm:hidden"></div>
+
+                <!-- ステップ 1 -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 relative">
+                    <div class="flex items-center gap-4 sm:w-1/3">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm shrink-0 z-10">✓</span>
+                        <span class="font-bold text-sm text-slate-800">旅行情報の確定</span>
+                    </div>
+                    <div class="sm:w-2/3 pl-12 sm:pl-0">
+                        <p class="text-xs text-slate-500">コースやスケジュール、参加メンバーの最終調整を行います。</p>
+                    </div>
+                </div>
+
+                <!-- ステップ 2 -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 relative">
+                    <div class="flex items-center gap-4 sm:w-1/3">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-sm shrink-0 z-10">2</span>
+                        <span class="font-bold text-sm text-slate-800">お支払い受付開始</span>
+                    </div>
+                    <div class="sm:w-2/3 pl-12 sm:pl-0">
+                        <p class="text-xs text-blue-600 font-medium">現在こちらのフェーズを準備中です。開始時にご案内いたします。</p>
+                    </div>
+                </div>
+
+                <!-- ステップ 3 -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 relative">
+                    <div class="flex items-center gap-4 sm:w-1/3">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-400 font-bold text-sm shrink-0 z-10">3</span>
+                        <span class="font-bold text-sm text-slate-400">最終案内・出発</span>
+                    </div>
+                    <div class="sm:w-2/3 pl-12 sm:pl-0">
+                        <p class="text-xs text-slate-400">決済完了後、しおりや航空券、集合場所等の最終案内をお送りします。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- お問い合わせ情報（プレースホルダー） -->
+        <div class="text-center bg-slate-100/60 rounded-xl p-4 w-full">
+            <p class="text-xs text-slate-500 mb-1">本件に関するお問い合わせ、またはお急ぎのご連絡は下記までお願いいたします</p>
+            <p class="text-sm font-semibold text-slate-700">旅行事務局 / <a href="mailto:dousabo@email.com" class="text-blue-600 hover:underline">dousabo@email.com</a></p>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="w-full max-w-5xl mx-auto px-6 py-8 border-t border-slate-200/80 text-center sm:text-left">
+        <p class="text-xs text-slate-400">&copy; 2026 Travel Payment System. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
